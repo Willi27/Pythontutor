@@ -3,37 +3,35 @@
 
 # # **Lab Work 4.1**
 
-# In[ ]:
+# In[7]:
 
 
 def course_for_year(currency):
     import datetime
     import requests
     
-    # ссылка на API
-    LINK = 'https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json'
-    # дист(список) с ежедневным курсом за год(365 дней)
-    course_for_last_year = []
-    # текущая дата для начала отсчета
-    current_date = datetime.datetime.now()
+    try:
+        # ссылка на API
+        LINK = 'https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json'
+        # дист(список) с ежедневным курсом за год(365 дней)
+        course_for_last_year = []
+        # текущая дата для начала отсчета
+        current_date = datetime.datetime.now()
 
-    # цикл для ежедневного прохождения по курсу и добавления результатов в список(course_for_last_year)
-    for _ in range(365):
-        p = {'date': current_date.strftime('%Y %m %d'), 'valcode': currency}
-        
-        try:
+        # цикл для ежедневного прохождения по курсу и добавления результатов в список(course_for_last_year)
+        for _ in range(365):
+            p = {'date': current_date.strftime('%Y %m %d'), 'valcode': currency}
             r = requests.get(LINK, params = p).json()
-        except Error:
-            print('Произошла ошибка. Повторите ваш запрос')
-       
-        course_for_last_year.append([r[0]['exchangedate'], float(r[0]['rate'])])
-        print([r[0]['exchangedate'], float(r[0]['rate'])])
-        current_date -= datetime.timedelta(days = 1)
+            course_for_last_year.append([r[0]['exchangedate'], float(r[0]['rate'])])
+            print([r[0]['exchangedate'], float(r[0]['rate'])])
+            current_date -= datetime.timedelta(days = 1)
     
-    for i in course_for_last_year:
-        print(i)
-    return course_for_last_year
-    
+        for i in course_for_last_year:
+            print(i)
+        return course_for_last_year
+    except Error:
+        print('Произошла ошибка. Повторите ваш запрос')
+   
     
 def course_on_months(list):
     import datetime
@@ -87,11 +85,8 @@ def serialization(file, name):
 
 if __name__ == '__main__':
     listCourse = course_for_year(input('Введите тип валюты: '))
-    if listCourse == None:
-        print('Вы ввели некоректный тип валюты. Повторите попытку')
-    else:
-        course_on_months(listCourse)
-        serialization(listCourse, input('Введите название фаила '))
+    course_on_months(listCourse)
+    serialization(listCourse, input('Введите название фаила '))
     
 
 
